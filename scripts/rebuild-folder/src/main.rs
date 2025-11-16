@@ -258,45 +258,45 @@ fn main() -> anyhow::Result<()> {
 
     // 已弃用，准备使用 CloudFlare Worker 代替
     // 生成贡献者头像画廊图
-    // {
-    //     let avatar_size = 70;
-    //     let padding = 1;
-    //     let avatar_size_inner = avatar_size - padding * 2;
-    //     let width = 800 / avatar_size * avatar_size;
-    //     let height = (contributors_count / (width / avatar_size) + 1) * avatar_size;
+     {
+         let avatar_size = 70;
+         let padding = 1;
+         let avatar_size_inner = avatar_size - padding * 2;
+         let width = 800 / avatar_size * avatar_size;
+         let height = (contributors_count / (width / avatar_size) + 1) * avatar_size;
 
-    //     let mut svg_file = std::fs::File::create(root_dir.join("CONTRIBUTORS.svg"))?;
+         let mut svg_file = std::fs::File::create(root_dir.join("CONTRIBUTORS.svg"))?;
 
-    //     writeln!(
-    //         svg_file,
-    //         r##"<svg version="1.1" baseProfile="full" width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">"##
-    //     )?;
+         writeln!(
+             svg_file,
+             r##"<svg version="1.1" baseProfile="full" width="{width}" height="{height}" xmlns="http://www.w3.org/2000/svg">"##
+         )?;
 
-    //     let mut avatar_data_buf = Vec::with_capacity(1024 * 1024 * 10);
-    //     for (i, (contributor, _count)) in contribution_list.iter().enumerate() {
-    //         println!("[{i}/{contributors_count}] 正在获取用户 ID {contributor} 的头像",);
-    //         let x = (i % (width / avatar_size)) * avatar_size + padding;
-    //         let y = (i / (width / avatar_size)) * avatar_size + padding;
-    //         let avatar_url = format!(
-    //             "https://avatars.githubusercontent.com/u/{}?v=4",
-    //             contributor
-    //         );
-    //         avatar_data_buf.clear();
-    //         let mut res = ureq::get(&avatar_url)
-    //             .call()
-    //             .context("无法下载贡献者头像")?
-    //             .into_body()
-    //             .into_reader();
-    //         res.read_to_end(&mut avatar_data_buf)?;
-    //         let avatar_data = BASE64_STANDARD.encode(&avatar_data_buf);
-    //         writeln!(
-    //             svg_file,
-    //             r##"<image x="{x}" y="{y}" width="{avatar_size_inner}" height="{avatar_size_inner}" href="data:image;base64,{avatar_data}" style="clip-path: inset(0 0 0 0 round 50%);" />"##
-    //         )?;
-    //     }
+         let mut avatar_data_buf = Vec::with_capacity(1024 * 1024 * 10);
+         for (i, (contributor, _count)) in contribution_list.iter().enumerate() {
+             println!("[{i}/{contributors_count}] 正在获取用户 ID {contributor} 的头像",);
+             let x = (i % (width / avatar_size)) * avatar_size + padding;
+             let y = (i / (width / avatar_size)) * avatar_size + padding;
+             let avatar_url = format!(
+                 "https://avatars.githubusercontent.com/u/{}?v=4",
+                 contributor
+             );
+             avatar_data_buf.clear();
+             let mut res = ureq::get(&avatar_url)
+                 .call()
+                 .context("无法下载贡献者头像")?
+                 .into_body()
+                 .into_reader();
+             res.read_to_end(&mut avatar_data_buf)?;
+             let avatar_data = BASE64_STANDARD.encode(&avatar_data_buf);
+             writeln!(
+                 svg_file,
+                 r##"<image x="{x}" y="{y}" width="{avatar_size_inner}" height="{avatar_size_inner}" href="data:image;base64,{avatar_data}" style="clip-path: inset(0 0 0 0 round 50%);" />"##
+             )?;
+         }
 
-    //     writeln!(svg_file, r##"</svg>"##)?;
-    // }
+         writeln!(svg_file, r##"</svg>"##)?;
+     }
     // 生成贡献者贡献信息
     {
         let mut md_file = std::fs::File::create(root_dir.join("CONTRIBUTORS.md"))?;
